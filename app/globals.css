@@ -1,0 +1,135 @@
+/* HTML5 display-role reset for older browsers */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+  letter-spacing: -1px;
+}
+
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+html {
+  /* rem사용을 위해 기본 사이즈를 10px로 고정 */
+  /* 반응형 웹뷰 제작 시 font-size를 변경 하면 전체적으로 적용 가능. */
+  font-size: 10px;
+  font-family: "regular";
+  color: #0f0f0f;
+}
+
+body {
+  padding: 0;
+  line-height: 1;
+  margin: 0 auto;
+  /* 메뉴바 상단 고정으로 body내용을 그만큼 내려서 보여줘야함 */
+  padding-top: 118px;
+  /* 글자 드래그 방지 */
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+ol,
+ul {
+  list-style: none;
+}
+
+blockquote,
+q {
+  quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: "";
+  content: none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+input {
+  outline: none;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* 폰트 */
+@font-face {
+  font-family: "regular";
+  font-weight: 400;
+  src: url("/fonts/NotoSansKR-Regular.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "medium";
+  font-weight: 500;
+  src: url("/fonts/NotoSansKR-Medium.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "semiBold";
+  font-weight: 600;
+  src: url("/fonts/NotoSansKR-SemiBold.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "bold";
+  font-weight: 700;
+  src: url("/fonts/NotoSansKR-Bold.woff2") format("woff2");
+  font-display: swap;
+}
+
+/* 커스텀 */
+:root {
+  /* FONT-SIZE  */
+  --font-size-48: 4.8rem;
+  --font-size-40: 4rem;
+  --font-size-24: 2.4rem;
+  --font-size-20: 2rem;
+  --font-size-18: 1.8rem;
+  --font-size-16: 1.6rem;
+  --font-size-15: 1.5rem;
+  --font-size-14: 1.4rem;
+  --font-size-13: 1.3rem;
+  --font-size-12: 1.2rem;
+  --font-size-11: 1.1rem;
+  /* COLOR */
+}
+
+a {
+  color: #5a5a5a;
+}
+
+@media screen and (max-width: 1440px) {
+  body {
+    padding-top: 64px;
+  }
+}

@@ -1,0 +1,152 @@
+.footerSection {
+  border-top: 1px solid #e4e4e4;
+}
+
+.footerContainer {
+  width: 100%;
+  padding-bottom: 80px;
+  background-color: #fff;
+  position: relative;
+}
+
+.footerContainer .topWrapper {
+  height: 56px;
+  border-bottom: 1px solid #e4e4e4;
+  margin-bottom: 40px;
+}
+
+.footerContainer .top {
+  padding: 0 80px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  height: 100%;
+  max-width: 2560px;
+  margin: 0 auto;
+  font-size: var(--font-size-15);
+  color: #0f0f0f;
+}
+.footerContainer .top p:last-child {
+  font-family: "bold";
+}
+
+.footerContainer .bottom {
+  padding: 0 80px;
+  max-width: 2560px;
+  margin: 0 auto;
+  font-size: var(--font-size-14);
+  line-height: 1.4;
+  margin-top: 40px;
+  color: #0f0f0f;
+}
+
+.footerContainer .mb20 {
+  margin-bottom: 20px;
+}
+
+.footerContainer .wrapper {
+  width: 100%;
+}
+
+.footerContainer .wrapper > p {
+  margin-top: 12px;
+  padding: 0 12px;
+  white-space: nowrap;
+}
+
+.footerContainer .bottom .companyInfo {
+  display: flex;
+  gap: 32px;
+}
+
+.footerContainer .maxWidth {
+  max-width: 655px;
+}
+
+.footerContainer .imgWrapper {
+  display: flex;
+  align-items: center;
+  width: 30%;
+  gap: 6px;
+}
+
+.mobileFooter {
+  padding: 30px 20px 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 360px;
+  margin: 0 auto;
+  font-size: var(--font-size-12);
+  color: #707070;
+  display: none;
+}
+
+.mobileFooter img {
+  margin-right: 6px;
+  cursor: pointer;
+}
+
+.mobileFooter .textWrapper {
+  line-height: 1.8;
+  margin-top: 36px;
+}
+
+.mobileFooter .textWrapper .row {
+  display: flex;
+}
+
+.col_1 {
+  min-width: 60px;
+}
+
+.mobileFooter .dividerWrapper {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.copyrightWrapper {
+  text-align: center;
+}
+.mobileFooter .divider {
+  background-color: #8c8c8c;
+  width: 1px;
+  height: 8px;
+}
+
+.mobileFooter .termsPolicyWrapper {
+  margin-top: 18px;
+  color: #8c8c8c;
+  line-height: 2;
+}
+
+.mobileFooter .imgWrapper {
+  display: flex;
+  align-items: flex-end;
+}
+
+.logo_360 {
+  display: none;
+}
+
+@media screen and (max-width: 950px) {
+  .footerContainer {
+    display: none;
+  }
+
+  .mobileFooter {
+    display: flex;
+  }
+}
+
+@media screen and (max-width: 1440px) {
+  .logo {
+    display: none;
+  }
+
+  .logo_360 {
+    display: block;
+  }
+}

@@ -1,0 +1,143 @@
+.navBarContainer {
+  top: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 9997;
+  transition: all 0.5s;
+}
+
+.navBarContainer.setWhite {
+  background-color: #fff;
+}
+
+.navBarContainer.setWhite .supportTooltip .divider {
+  background-color: #e4e4e4;
+}
+
+.navBarContainer.setWhite .rightPart .userDataWrapper,
+.navBarContainer.setWhite .rightPart .userDataWrapper .supportTooltip,
+.navBarContainer.setWhite .supportBtn,
+.navBarContainer.setWhite a {
+  color: #0f0f0f;
+}
+
+.navBarContainer.setWhite .rightPart .userDataWrapper .supportTooltip,
+.navBarContainer.setWhite .supportTooltip {
+  background-color: #fff;
+  border: 1px solid #e4e4e4;
+}
+
+.navBarContainer.setWhite .bulkPurchaseBtn {
+  color: #fff;
+  background-color: #007be4;
+}
+
+.navBarContainer.setWhite .navBarWrapper {
+  background-color: #fff;
+  border-bottom: 1px solid #e4e4e4;
+}
+
+.navBarWrapper {
+  font-family: "medium";
+  max-width: 2560px;
+  font-size: var(--font-size-18);
+  height: 118px;
+  padding: 0 160px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  word-break: keep-all;
+  position: relative;
+  z-index: 9998;
+  background-color: #0f1c28;
+  border-bottom: 1px solid #0f1c28;
+}
+
+.navBarWrapper a,
+.navBarWrapper .supportBtn {
+  color: #fff;
+}
+
+.navBarWrapper .leftPart {
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
+
+.logo_1440,
+.logo_720,
+.logo_360 {
+  display: none;
+}
+
+@media screen and (max-width: 500px) {
+  .navBarWrapper {
+    padding: 0 12px;
+  }
+
+  .navBarWrapper {
+    font-size: var(--font-size-14);
+  }
+}
+
+@media screen and (max-width: 1440px) {
+
+  .logo,
+  .logo_720,
+  .logo_360 {
+    display: none;
+  }
+
+  .logo_1440 {
+    display: block;
+  }
+
+  .navBarWrapper {
+    height: 64px;
+    padding: 0 30px;
+  }
+}
+
+@media screen and (max-width: 920px) {
+
+  .menu,
+  .rightPart,
+  .logo {
+    display: none !important;
+  }
+}
+
+@media screen and (max-width: 720px) {
+
+  .logo_1440,
+  .logo,
+  .logo_360 {
+    display: none;
+  }
+
+  .logo_720 {
+    display: block;
+  }
+
+  .navBarWrapper {
+    padding: 0 20px;
+  }
+}
+
+@media screen and (max-width: 360px) {
+
+  .logo_1440,
+  .logo_720,
+  .logo {
+    display: none;
+  }
+
+  .logo_360 {
+    display: block;
+  }
+
+  .navBarWrapper {
+    padding: 0 12px;
+  }
+}

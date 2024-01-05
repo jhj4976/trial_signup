@@ -1,0 +1,87 @@
+.termsPolicyContainer {
+  width: 100%;
+}
+
+.termsPolicyContainer .agreementBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  word-break: keep-all;
+  font-size: var(--font-size-15);
+  min-height: 48px;
+  border-bottom: 1px solid #e4e4e4;
+  padding: 0 14px 0 12px;
+  line-height: 1.4;
+}
+
+.termsPolicyContainer .agreementBox input,
+.termsPolicyContainer .agreementBox label {
+  cursor: pointer;
+}
+
+.termsPolicyContainer .agreementBox label {
+  margin-right: 12px;
+}
+
+.termsPolicyContainer .agreementBox:last-child {
+  border-bottom: none;
+}
+
+.termsPolicyContainer .agreeDesc {
+  margin-bottom: 16px;
+  font-size: var(--font-size-13);
+  color: #707070;
+  line-height: 1.4;
+}
+
+.termsPolicyContainer input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 12px;
+}
+
+.inputWrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.blueText {
+  font-size: var(--font-size-13);
+  color: #007be4;
+  cursor: pointer;
+}
+
+.signupInputWrapper {
+  display: flex;
+  width: 100%;
+  font-size: var(--font-size-13);
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.signupInputWrapper {
+  margin-right: 8px;
+}
+
+.signupInputWrapper p,
+.signupInputWrapper input {
+  cursor: pointer;
+}
+
+.allAgreeText {
+  font-size: var(--font-size-15);
+}
+
+.termsPolicyWrapper {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #e4e4e4;
+  border-radius: 4px;
+}
+
+.notice {
+  margin-top: 16px;
+  color: #e50706;
+  font-size: var(--font-size-12);
+}
