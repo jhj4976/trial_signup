@@ -1,10 +1,11 @@
-const serverUrl = "http://127.0.0.1:3000/"
+const serverUrl = process.env.NEXT_PUBLIC_NOW_HOST
 const localApiUrl = {
   openApi: "http://127.0.0.1:4100/",
 }
 const devApiUrl = {
-  openApi: "http://dev.api.open-api.dev-sea.com/",
+  openApi: process.env.NEXT_PUBLIC_DEV_API_URL,
 }
+
 const openApiUrl = devApiUrl.openApi
 
 const env = {

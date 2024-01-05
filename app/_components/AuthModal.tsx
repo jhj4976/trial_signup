@@ -2,26 +2,27 @@ import styles from "./AuthModal.module.css"
 import Lottie from "react-lottie-player"
 import check from "@/public/imgs/common/check.json"
 type CommonModal = {
-  closeModalHandler: any
-  userType: boolean // 개인/기업
+  userType: string // 개인/기업
   isSuccess: boolean // 성공/실패
   modalType: string // 모달 타입 ex.회원가입 성공/실패, 이메일/비밀번호 찾기...
   userEmail: string // 이메일 찾기에서만 사용
   userName: string //
+  confirmHandler: any
 }
 export default function AuthModal({
   userType,
   isSuccess,
   modalType,
+  confirmHandler
 }: CommonModal) {
   return (
     <section className={styles.authModalSection}>
       <article className={styles.authModal}>
         <div className={styles.contentsWrapper}>
           <div className={styles.contents}>
-            {modalType === "SIGNUP" &&
+            {modalType === "SIGN_UP" &&
               (isSuccess ? (
-                userType ? (
+                userType === '0' ? (
                   <>
                     <Lottie
                       loop
@@ -60,11 +61,58 @@ export default function AuthModal({
                   <p>이미 가입된 회원입니다</p>
                   <button
                     type="button"
-                    onClick={() => (window.location.href = "/")}>
+                    onClick={() => confirmHandler(false)}>
                     확인
                   </button>
                 </>
               ))}
+            {modalType === "BUSINESS_VERIFICATION" &&
+              (isSuccess ? (
+                <>
+                  <p className={styles.desc}>
+                    기업 정보가 확인되었습니다
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => confirmHandler(false)}>
+                    확인
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p>입력한 정보를 다시 확인해주세요</p>
+                  <button
+                    type="button"
+                    onClick={() => confirmHandler(false)}>
+                    확인
+                  </button>
+                </>
+              ))
+            }
+            {
+              modalType === 'ER_DUP_ENTRY' && (
+                <>
+                  <p>동일한 사업자번호로 가입된 계정이 존재합니다.</p>
+                  <button
+                    type="button"
+                    onClick={() => confirmHandler(false)}>
+                    확인
+                  </button>
+                </>
+              )
+            }
+            {
+              modalType === 'SIGN_UP_INFO_MISSING' && (
+                <>
+                  <p>입력한 정보를 다시 한번 확인해주세요.</p>
+                  <button
+                    type="button"
+                    onClick={() => confirmHandler(false)}>
+                    확인
+                  </button>
+                </>
+              )
+            }
           </div>
         </div>
       </article>

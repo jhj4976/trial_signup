@@ -3,23 +3,24 @@ import React, { useCallback, useEffect, useState } from "react"
 import styles from "./TermsPolicyCheckBox.module.css"
 
 let dataLists: any = [
-  { name: "(필수) 만 14세 이상입니다", id: "terms_old" },
-  { name: "(필수) 서비스 이용약관", id: "terms_service" },
-  { name: "(필수) 개인정보 수집 및 이용", id: "terms_privacy" },
-  { name: "(필수) 전자해도 이용약관", id: "terms_electronic" },
+  { name: "(필수) 만 14세 이상입니다", id: "terms_old", link: '' },
+  { name: "(필수) 서비스 이용약관", id: "terms_service", link: 'https://mapsea-navigation.super.site/terms-service' },
+  { name: "(필수) 개인정보 수집 및 이용", id: "terms_privacy", link: 'https://mapsea-navigation.super.site/terms-privacy' },
+  { name: "(필수) 전자해도 이용약관", id: "terms_electronic", link: 'https://mapsea-navigation.super.site/terms-chart' },
   {
     name: "(선택) 위치기반 서비스 이용약관",
     id: "terms_location",
+    link: 'https://mapsea-navigation.super.site/terms-location'
   },
   {
     name: "(선택) 마케팅 정보 수신동의 - 이메일",
     id: "terms_marketing_email",
-    state_duration: "1",
-    service_type: "SERVICE_01",
+    link: 'https://mapsea-navigation.super.site/terms-marketing'
   },
   {
     name: "(선택) 마케팅 정보 수신동의 - SMS",
     id: "terms_marketing_sms",
+    link: 'https://mapsea-navigation.super.site/terms-marketing'
   },
 ]
 
@@ -74,8 +75,8 @@ export default function TermsPolicyCheckBox({
             checkedList.length === 0
               ? false
               : checkedList.length === dataLists.length
-              ? true
-              : false
+                ? true
+                : false
           }
         />
         <p className={styles.allAgreeText}>전체동의</p>
@@ -97,7 +98,9 @@ export default function TermsPolicyCheckBox({
                   {list.name}
                 </label>
               </div>
-              <span className={styles.blueText}>내용보기</span>
+              {!(list.id === 'terms_old') &&
+                <span className={styles.blueText} onClick={() => window.open(list.link)}>내용보기</span>
+              }
             </div>
           ))}
         </div>

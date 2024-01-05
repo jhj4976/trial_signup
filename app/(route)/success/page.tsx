@@ -12,7 +12,10 @@ export default function success() {
     let set_data = {}
     if (Number(req_type) === NICE_API_TYPE_ENUM.SIGNUP) {
       const name = searchParams.get("name") as string
-      set_data = { name }
+      const phone = searchParams.get("phone") as string
+      const user_type = searchParams.get("user_type") as string
+      set_data = { name, phone, user_type }
+      console.log('name, phone, user_type', name, phone, user_type)
     }
     setQuery(set_data)
   }
@@ -26,9 +29,10 @@ export default function success() {
       window.close()
     }
   }, [pageLife])
+
   setTimeout(() => {
     setPageLife(false)
-  }, 500)
+  })
   return (
     <div>
       {/* <p>Success Page</p>

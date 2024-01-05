@@ -1,0 +1,28 @@
+# 서비스의 고유한 이름 - App Engine 내에서 서비스를 식별하는 데 사용됨
+# 운영 서비스 : default
+# 개발 서비스 : development-mapsea-service
+# 배포 시 명령어 : $ gcloud app deploy --version={버전명}
+# ex) $ gcloud app deploy --version=dev-0-0-1 / --version=prod-0-0-1
+service: trial-signup
+
+# 구동 환경(필수)
+runtime: nodejs20
+
+# 인스턴스 유형(필수) : F2는 인스턴스 클래스를 나타냄
+# 할당된 CPU와 메모리 자원의 양을 결정
+# F2 인스턴스 클래스는 표준 환경에서 제공되는 인스턴스 중 하나
+# F2 인스턴스는 일반적으로 F1보다 두 배의 CPU 용량과 메모리를 가진다
+# 트라이얼 버전은 F1으로 수정, 추후에 정식 서비스는 F2으로 변경해야 할지도..?
+instance_class: F1
+
+# 앱의 URL핸들링과 정적 파일 서빙을 구성하는 데에 사용.
+handlers:
+- url: /.*
+  secure: always
+  redirect_http_response_code: 301
+  script: auto
+
+automatic_scaling:
+  min_idle_instances: 2
+  max_idle_instances: 15
+

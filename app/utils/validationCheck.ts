@@ -3,7 +3,7 @@
 const emailReg = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
 // 비밀번호(8~20자 영문자, 숫자, 특수문자)
 const passwordReg = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,20}$/
-// 날짜
+// const passwordReg = /^[a-zA-Z0-9~!@#$%^&*()_+]{8,20}$/;
 const dateRegex = /^\d{4}.\d{2}.\d{2}$/
 
 export function validationCheck(type: string, value: string) {

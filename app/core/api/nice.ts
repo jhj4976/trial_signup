@@ -62,32 +62,22 @@ export default class NiceApiInstance {
         default:
           throw new Error("알맞은 type이 반환되지 않았습니다.")
       }
-
       return { ...body, user_type: userType }
     } catch (error) {
       throw error
     }
   }
 
-  public getPassEncryptedData = async ({
-    reqType,
-    userType,
-  }: {
-    reqType: NICE_API_TYPE_ENUM
-    userType: SSO_USER_TYPE
-  }): Promise<INiceApiTokenResult> => {
+  public getPassEncryptedData = async (reqType: NICE_API_TYPE_ENUM.SIGNUP, userType: SSO_USER_TYPE): Promise<INiceApiTokenResult> => {
     try {
       const url = this.setApiUrl({
         apiPath: env.openApi.getPassEncryptedData.url,
       })
-
       const body: IGetPassEncryptedDataBody = this.getRedirectUrl({
         reqType,
         userType,
       })
-
       const { data } = await this.API.post(url, body)
-      // console.log("nice", data)
       return data
     } catch (error) {
       console.error(error)

@@ -17,6 +17,7 @@ export default function InputContainer(props: any) {
     onBlur, // input 필드 방문 상태 관리
     visibilityHandler, // 눈 표시 보이기/숨기기 핸들러
     disabled,
+    maxLength = ''
   } = props
 
   return (
@@ -32,6 +33,7 @@ export default function InputContainer(props: any) {
           onChange={onChange}
           onBlur={onBlur}
           disabled={disabled}
+          maxLength={maxLength}
         />
         {isIcon === "1" &&
           (isShow === "1" ? (

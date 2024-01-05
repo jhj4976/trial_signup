@@ -1,0 +1,23 @@
+# dispatch 명령어 : $ gcloud app deploy dispatch.yaml
+# 주의사항 : gcloud app deploy로 서비스가 우선적으로 배포가 된 상태에서만 라우팅 룰 설정이 가능하다.
+# *중요* : 전체 애플리케이션 단위로 하나만 있음. 서비스별로 별도로 설정할 수 없음.
+# dispatch 역할 : 특정 경로로 들어오는 요청을 특정 서비스로 라투이 할 수 있음.
+#                 각 서비스로 트래픽을 분배 가능
+dispatch:
+  # 맵시 서비스 정식 홈페이지
+  - url: "service.mapsea.io/*"
+    service: default
+  # 맵시 서비스 개발용 홈페이지
+  - url: "dev.service.mapsea.io/*"
+    service: development-mapsea-service
+
+  # # 맵시 어드민 정식 홈페이지
+  # - url : "admin.mapsea.io/*"
+  #   service: production-mapsea-admin
+  # # 맵시 어드민 개발용 홈페이지
+  - url: "dev.admin.mapsea.io/*"
+    service: development-mapsea-admin
+
+  # 트라이얼
+  - url: "signup.service.mapsea.io/*"
+    service: trial-signup

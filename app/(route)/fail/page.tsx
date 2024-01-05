@@ -26,7 +26,7 @@ export default function fail() {
   }, [pageLife])
   setTimeout(() => {
     setPageLife(false)
-  }, 500)
+  })
   return (
     <div>
       {/* <p>test</p> */}

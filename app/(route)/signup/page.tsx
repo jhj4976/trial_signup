@@ -1,9 +1,7 @@
 "use client"
-
 import styles from "./page.module.css"
 import { useEffect, useState } from "react"
 import InputContainer from "../../_components/InputContainer"
-import TermsPolicyCheckBox from "@/app/_components/TermsPolicyCheckBox"
 import NiceApiInstance from "@/app/core/api/nice"
 import { INiceApiTokenResult } from "@/app/core/interface/INiceApi.interface"
 import { NICE_API_TYPE_ENUM } from "@/app/core/enum/niceApi.enum"
@@ -12,6 +10,9 @@ import { businessSignup, userSignup } from "@/app/service/signup"
 import { businessVerification } from "@/app/service/businessVerification"
 import AuthModal from "@/app/_components/AuthModal"
 import { SSO_USER_TYPE } from "@/app/core/enum/sso.enum"
+import { emailVerification } from "@/app/service/emailVerification"
+import { NICE_checkMobileNumber } from "@/app/service/NICE_checkMobileNumber"
+import TermsPolicyCheckBox from "@/app/_components/TermsPolicyCheckBox"
 
 export default function SignupPage() {
   const [commonModal, setCommonModal] = useState<boolean>(false)
@@ -20,6 +21,7 @@ export default function SignupPage() {
   const [isBusinessVerified, setIsBusinessVerified] = useState<boolean>(false)
   const NiceApi = new NiceApiInstance()
   const [niceName, setNiceName] = useState<string>("")
+  const [nicePhone, setNicePhone] = useState<string>("")
   const [isSuccess, setIsSuccess] = useState<boolean>(false)
   const [tokenVersionId, setTokenVersionId] = useState<string>("")
   const [popup, setPopup] = useState<Window | null>()
@@ -28,10 +30,10 @@ export default function SignupPage() {
     integrity_value: "",
     token_version_id: "",
   })
-  // type - true : 개인 / false : 기업
-  const [userType, setUserType] = useState(true)
+  const [modalType, setModalType] = useState('');
+  const [userType, setUserType] = useState('0')
   const userTypeToggleHandler = (e: any) => {
-    let type: boolean = e.target.id === "INDIVIDUAL" ? true : false
+    let type: string = e.target.id === "INDIVIDUAL" ? '0' : '1'
     setUserType(type)
   }
 
@@ -69,19 +71,49 @@ export default function SignupPage() {
       ...errors,
       [e.target.name]: "",
     })
+
+    if (e.target.name === 'password') {
+      let isValidPassword = validationCheck("password", e.target.value)
+      if (!isValidPassword) {
+        // 비밀번호가 유효하지 않을 때
+        setErrors({
+          ...errors,
+          password: "8~20자의 숫자,영문,특수문자 조합",
+        })
+      } else {
+        setErrors({
+          ...errors,
+          password: "",
+        })
+      }
+    }
+    if (e.target.name === 'passwordConfirm') {
+      if (values.password != e.target.value) {
+        setErrors({
+          ...errors,
+          passwordConfirm: "비밀번호가 일치하지 않습니다.",
+        })
+      } else {
+        setErrors({
+          ...errors,
+          passwordConfirm: "",
+        })
+      }
+    }
   }
 
   // blur 이벤트
-  const handleBlur = (e: any) => {
+  const handleBlur = async (e: any) => {
     let target = e.target
     let errorText = ""
+    // 필드 빈값일 때
     if (target.value === "") {
       switch (target.name) {
         case "email":
           errorText = "이메일을 입력해주세요."
           break
         case "password":
-          errorText = "비밀번호를 입력해주세요."
+          errorText = "8~20자의 숫자,영문,특수문자 조합"
           break
         case "passwordConfirm":
           errorText = "비밀번호가 일치하지 않습니다."
@@ -106,6 +138,85 @@ export default function SignupPage() {
         ...errors,
         [target.name]: errorText,
       })
+    }
+
+    // 필드 빈값 아닐 때
+    if (target.value != "") {
+      // 이메일
+      if (target.name === 'email') {
+        const isValidEmail = validationCheck('email', target.value)
+        if (!isValidEmail) {
+          setErrors({
+            ...errors,
+            email: "올바른 이메일을 입력해주세요",
+          })
+        } else {
+          const resp = await emailVerification(userType, values.email);
+          if (!resp) {
+            setErrors({
+              ...errors,
+              email: "가입한 이력이 있는 이메일입니다",
+            })
+          }
+        }
+      }
+      // 비밀번호
+      if (target.name === 'password') {
+        if (target.value.length < 8) {
+          setErrors({
+            ...errors,
+            password: "최소 8자 이상",
+          })
+        } else {
+          let isValidPassword = validationCheck("password", values.password)
+          if (!isValidPassword) {
+            // 비밀번호가 유효하지 않을 때
+            setErrors({
+              ...errors,
+              password: "8~20자의 숫자,영문,특수문자 조합",
+            })
+          } else {
+            if (values.password != values.passwordConfirm) {
+              setErrors({
+                ...errors,
+                passwordConfirm: "비밀번호가 일치하지 않습니다.",
+              })
+            } else {
+              setErrors({
+                ...errors,
+                passwordConfirm: "",
+              })
+            }
+          }
+        }
+      }
+      // 비밀번호 중복 체크
+      if (target.name === 'passwordConfirm') {
+        // 비밀번호 유효성 검사
+        let isValidPassword = validationCheck("password", values.password)
+        if (!isValidPassword) {
+          // 비밀번호가 유효하지 않을 때
+          setErrors({
+            ...errors,
+            password: "8~20자의 숫자,영문,특수문자 조합",
+          })
+          return
+        } else {
+          if (values.password != values.passwordConfirm) {
+            // 유효한 비밀번호지만 비밀번호 재확인과 다를 때
+            setErrors({
+              ...errors,
+              passwordConfirm: "비밀번호가 일치하지 않습니다.",
+            })
+            return
+          } else {
+            setErrors({
+              ...errors,
+              passwordConfirm: "",
+            })
+          }
+        }
+      }
     }
   }
 
@@ -151,15 +262,7 @@ export default function SignupPage() {
       values.businessCEOName,
       values.businessName,
     )
-    if (!isValid) {
-      setErrors({
-        ...errors,
-        businessNumber: "사업자등록번호를 입력해주세요",
-        businessCEOName: "사업자등록번호를 입력해주세요",
-        businessStartDate: "사업자등록번호를 입력해주세요",
-        businessName: "사업자등록번호를 다시 확인해주세요",
-      })
-    } else {
+    if (isValid) {
       setErrors({
         ...errors,
         businessNumber: "",
@@ -169,6 +272,9 @@ export default function SignupPage() {
       })
     }
     setIsBusinessVerified(isValid)
+    setIsSuccess(isValid)
+    setModalType("BUSINESS_VERIFICATION")
+    setCommonModal(true)
   }
 
   // 가입하기 버튼
@@ -184,7 +290,7 @@ export default function SignupPage() {
     const businessName: string = values.businessName || ""
 
     // 기업회원일 때에만 추가 검사
-    if (!userType) {
+    if (userType === '1') {
       // 사업자인증유효성 검사
       if (
         !businessNumber ||
@@ -196,10 +302,12 @@ export default function SignupPage() {
         setErrors({
           ...errors,
           businessNumber: "사업자등록번호를 입력해주세요",
-          businessCEOName: "사업자등록번호를 입력해주세요",
-          businessStartDate: "사업자등록번호를 입력해주세요",
+          businessCEOName: "대표자명을 입력해주세요",
+          businessStartDate: "개업일자를 입력해주세요",
           businessName: "기업명을 입력해주세요",
         })
+        setModalType('SIGN_UP_INFO_MISSING')
+        setCommonModal(true)
         return
       }
     }
@@ -210,8 +318,10 @@ export default function SignupPage() {
       // 이메일이 유효하지 않을 때
       setErrors({
         ...errors,
-        email: "비밀번호 형식이 유효하지 않습니다.",
+        email: "이메일 형식이 유효하지 않습니다.",
       })
+      setModalType('SIGN_UP_INFO_MISSING')
+      setCommonModal(true)
       return
     }
 
@@ -221,8 +331,10 @@ export default function SignupPage() {
       // 비밀번호가 유효하지 않을 때
       setErrors({
         ...errors,
-        password: "비밀번호 형식이 유효하지 않습니다.",
+        password: "8~20자의 숫자,영문,특수문자 조합",
       })
+      setModalType('SIGN_UP_INFO_MISSING')
+      setCommonModal(true)
       return
     } else {
       if (password != passwordConfirm) {
@@ -231,6 +343,8 @@ export default function SignupPage() {
           ...errors,
           passwordConfirm: "비밀번호가 일치하지 않습니다.",
         })
+        setModalType('SIGN_UP_INFO_MISSING')
+        setCommonModal(true)
         return
       }
     }
@@ -241,6 +355,8 @@ export default function SignupPage() {
         ...errors,
         phoneNumber: "연락처 인증을 해주세요.",
       })
+      setModalType('SIGN_UP_INFO_MISSING')
+      setCommonModal(true)
       return
     }
 
@@ -253,6 +369,8 @@ export default function SignupPage() {
     ) {
       // (필수) 전부 선택 안하면 에러 보여주기
       setTermsPolicyValid(false)
+      setModalType('SIGN_UP_INFO_MISSING')
+      setCommonModal(true)
       return
     }
 
@@ -260,13 +378,13 @@ export default function SignupPage() {
     for (let unit in termsPolicy) {
       if (termsPolicy[`${unit}`] === true) {
         termsPolicy[`${unit}`] = "Y"
-      } else {
+      } else if (termsPolicy[`${unit}`] === false) {
         termsPolicy[`${unit}`] = "N"
       }
     }
 
     // 가입하기
-    if (userType) {
+    if (userType === '0') {
       // (최종)개인 회원가입 데이터
       const userData = {
         token_version_id: tokenVersionId,
@@ -278,7 +396,7 @@ export default function SignupPage() {
       const getUserResult = await userSignup(userData)
       // 성공/실패 팝업창 옵션 설정
       setIsSuccess(getUserResult)
-    } else if (!userType) {
+    } else if (userType === '1') {
       // (최종)기업 회원가입 데이터
       const businessData = {
         token_version_id: tokenVersionId,
@@ -292,13 +410,26 @@ export default function SignupPage() {
         ...termsPolicy,
       }
       const getBusinessResult = await businessSignup(businessData)
+
+      //@@@@@@@@@@@@@@@@@@@@@@@@ 사업자 등록번호 중복 추후 삭제
+      if (getBusinessResult === 'ER_DUP_ENTRY') {
+        setModalType("ER_DUP_ENTRY")
+        setCommonModal(true)
+        return;
+      }
+      //@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
       setIsSuccess(getBusinessResult)
     }
     // 성공/실패 팝업창 열기
+    setModalType("SIGN_UP")
     setCommonModal(true)
   }
 
   const redirectHandler = () => {
+    // 초기화
+    setNiceName('')
+    setNicePhone('')
     const form = document.forms.namedItem("nice_form")
     if (form) {
       niceApiPopupOpenHandler(form)
@@ -308,13 +439,15 @@ export default function SignupPage() {
   }
 
   useEffect(() => {
-    // 제일 처음 나이스 API 토큰 가져오기
-    getNiceApiEncryptedDataHandler()
     window.addEventListener("message", receiveMessageEvent, false)
     return () => {
       window.removeEventListener("message", receiveMessageEvent, false)
     }
   }, [])
+  useEffect(() => {
+    // 제일 처음 나이스 API 토큰 가져오기
+    getNiceApiEncryptedDataHandler()
+  }, [userType])
 
   useEffect(() => {
     const popupCloseEvent = setInterval(() => {
@@ -326,30 +459,40 @@ export default function SignupPage() {
     return () => clearInterval(popupCloseEvent)
   }, [popup, niceToken])
 
-  const receiveMessageEvent = (event: MessageEvent) => {
+  const receiveMessageEvent = async (event: MessageEvent) => {
     const getMessage = event.data
     const origin = event.origin
     if (typeof getMessage === "string") {
+      // 
       const data = JSON.parse(getMessage)
       // 이미 가입한 계정일 때
+      const { name, phone, user_type } = data
       if (data.pathname === "/fail") {
-        console.log("it failed")
+        // console.log("it failed")
         setCommonModal(true)
         return
       }
-      const { name } = data
-      setNiceName(name)
+      //NICE PASS 핸드폰 번호 중복 확인
+      const resp = await NICE_checkMobileNumber(phone, user_type)
+      if (resp === 0) {
+        // console.log("nice phone number validation success")
+        setNiceName(name)
+        setNicePhone(phone)
+      } else {
+        // console.log("nice phone number validation failed")
+        setModalType("SIGN_UP")
+        setIsSuccess(false)
+        setCommonModal(true)
+      }
     }
   }
 
   const getNiceApiEncryptedDataHandler = async () => {
     try {
-      const getPassEncryptedDataParam = {
-        userType: userType ? SSO_USER_TYPE.COMPANY : SSO_USER_TYPE.USER,
-        reqType: NICE_API_TYPE_ENUM.SIGNUP,
-      }
+      const user_Type = userType === '0' ? SSO_USER_TYPE.USER : SSO_USER_TYPE.COMPANY
+      const req_Type = NICE_API_TYPE_ENUM.SIGNUP
       const { enc_data, integrity_value, token_version_id } =
-        await NiceApi.getPassEncryptedData(getPassEncryptedDataParam)
+        await NiceApi.getPassEncryptedData(req_Type, user_Type)
       setNiceToken({ enc_data, integrity_value, token_version_id })
     } catch (error) {
       console.error("getNiceApiEncryptedDataHandler Error : ", error)
@@ -378,12 +521,12 @@ export default function SignupPage() {
       {/* 모달 */}
       {commonModal && (
         <AuthModal
-          closeModalHandler={setCommonModal}
           userType={userType}
           isSuccess={isSuccess} //추가
           userEmail={""} //추가
           userName={""} //추가
-          modalType={"SIGNUP"}
+          modalType={modalType}
+          confirmHandler={setCommonModal}
         />
       )}
       {/* input 필드 */}
@@ -396,18 +539,18 @@ export default function SignupPage() {
           }}>
           <div
             id="INDIVIDUAL"
-            className={`${styles.individual} ${userType && styles.isActive}`}>
+            className={`${styles.individual} ${userType === '0' && styles.isActive}`}>
             개인회원
           </div>
           <div
             id="BUSINESS"
-            className={`${styles.business} ${!userType && styles.isActive}`}>
+            className={`${styles.business} ${userType === '1' && styles.isActive}`}>
             기업회원
           </div>
         </div>
         {
           // 기업회원
-          !userType && (
+          userType === '1' && (
             <div className={styles.businessRegistraionContainer}>
               <InputContainer
                 value={values.businessNumber}
@@ -426,8 +569,8 @@ export default function SignupPage() {
                 onBlur={handleBlur}
                 errorText={errors.businessStartDate}
                 title="개업일자"
-                placeholder="YYYY.MM.DD"
-                type="text"
+                placeholder="20200601"
+                type="number"
                 name="businessStartDate"
                 notice=""
               />
@@ -455,9 +598,8 @@ export default function SignupPage() {
               />
               <div className={styles.phoneVerificationWrapper}>
                 <button
-                  className={`${styles.phoneVerificationButton} ${
-                    isBusinessVerified ? styles.disabled : ""
-                  }`}
+                  className={`${styles.phoneVerificationButton} ${isBusinessVerified ? styles.disabled : ""
+                    }`}
                   onClick={businessVerificationHandler}
                   type="button"
                   disabled={isBusinessVerified}>
@@ -493,6 +635,7 @@ export default function SignupPage() {
             notice="8~20자의 영문자, 숫자, 특수문자를 입력해주세요"
             isIcon="1"
             isShow={pwIsVisible ? "1" : "0"}
+            maxLength={20}
             visibilityHandler={() => setPwIsVisible(!pwIsVisible)}
           />
           <InputContainer
@@ -507,18 +650,19 @@ export default function SignupPage() {
             notice=""
             isIcon="1"
             isShow={pwcIsVisible ? "1" : "0"}
+            maxLength={20}
             visibilityHandler={() => setPwcIsVisible(!pwcIsVisible)}
           />
         </div>
         {niceName ? (
           <div className={styles.phoneVerificationWrapper}>
             <p className={styles.title}>
-              {userType ? "연락처" : "담당자 휴대폰번호"}
+              {userType === '0' ? "연락처" : "담당자 휴대폰번호"}
             </p>
             <div className={styles.phoneNumberWrapper}>
               <input
                 className={styles.phoneNumber}
-                value="01073248696"
+                value={nicePhone}
                 onClick={redirectHandler}
                 type="number"
                 disabled
@@ -534,7 +678,7 @@ export default function SignupPage() {
         ) : (
           <div className={styles.phoneVerificationWrapper}>
             <p className={styles.title}>
-              {userType ? "연락처" : "담당자 휴대폰번호"}
+              {userType === '0' ? "연락처" : "담당자 휴대폰번호"}
             </p>
             <button
               className={styles.phoneVerificationButton}
@@ -548,7 +692,7 @@ export default function SignupPage() {
         <InputContainer
           value={niceName}
           errorText={errors.name}
-          title={userType ? "이름" : "담당자명"}
+          title={userType === '0' ? "이름" : "담당자명"}
           placeholder="본인인증 시 자동 입력됩니다"
           type="text"
           name="name"

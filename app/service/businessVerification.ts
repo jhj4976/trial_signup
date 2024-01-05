@@ -1,5 +1,4 @@
 import axios from "axios"
-import requests from "../core/api/requests"
 
 // 작업 중
 export async function businessVerification(
@@ -34,12 +33,12 @@ export async function businessVerification(
     }
 
     try {
-      const respData = await axios.post(
-        requests.fetchBusinessVerification,
-        data,
-      )
-      console.log("businessVerification", respData)
-      return true
+      const respData = await axios.post(process.env.NEXT_PUBLIC_BUSINESS_VERIFICATION, data)
+      if (respData?.data?.data?.result[0]?.valid_msg === '확인할 수 없습니다.') {
+        return false
+      } else {
+        return true
+      }
     } catch (e) {
       console.log("e : ", e)
       return false

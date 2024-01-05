@@ -14,11 +14,11 @@ export default function Footer() {
       <div className={styles.footerContainer}>
         <div className={styles.topWrapper}>
           <div className={styles.top}>
-            <p>이용약관</p>
-            <p>개인정보처리방침</p>
-            <p>위치기반 서비스 이용약관</p>
-            <p>전자해도 이용약관</p>
-            <p>고객지원</p>
+            <p onClick={() => { window.open('https://mapsea-navigation.super.site/terms-service') }}>이용약관</p>
+            <p onClick={() => { window.open('https://mapsea-navigation.super.site/terms-privacy') }}>개인정보처리방침</p>
+            <p onClick={() => { window.open('https://mapsea-navigation.super.site/terms-location') }}>위치기반 서비스 이용약관</p>
+            <p onClick={() => { window.open('https://mapsea-navigation.super.site/terms-chart') }}>전자해도 이용약관</p>
+            {/* <p className={styles.footerCustomerService}>고객지원</p> */}
           </div>
         </div>
         <div className={styles.bottom}>
@@ -89,14 +89,14 @@ export default function Footer() {
         )}
         <div className={styles.termsPolicyWrapper}>
           <div className={styles.dividerWrapper}>
-            <p>이용약관</p>
+            <p onClick={() => { window.open('https://mapsea-navigation.super.site/terms-service') }}>이용약관</p>
             <div className={styles.divider}></div>
-            <p>개인정보처리방침</p>
+            <p onClick={() => { window.open('https://mapsea-navigation.super.site/terms-privacy') }}>개인정보처리방침</p>
             <div className={styles.divider}></div>
-            <p>위치기반 서비스 이용약관</p>
-            <p>전자해도 이용약관</p>
-            <div className={styles.divider}></div>
-            <p>고객지원</p>
+            <p onClick={() => { window.open('https://mapsea-navigation.super.site/terms-location') }}>위치기반 서비스 이용약관</p>
+            <p onClick={() => { window.open('https://mapsea-navigation.super.site/terms-chart') }}>전자해도 이용약관</p>
+            {/* <div className={styles.divider}></div> */}
+            {/* <p onClick={() => window.open('')}>고객지원</p> */}
           </div>
           <div className={styles.copyrightWrapper}>
             <p>ⓒ 2023. MAPSEA Corp. all rights reserved.</p>

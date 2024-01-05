@@ -1,5 +1,4 @@
 import axios from "axios"
-import requests from "../core/api/requests"
 
 const staticParam = {
   state_duration: "1",
@@ -7,13 +6,13 @@ const staticParam = {
 }
 export async function userSignup(data: { [key: string]: string }) {
   //
-  console.log("-----userSignup api-----")
-  console.log("data send : ", data)
+  // console.log("-----userSignup api-----")
+  // console.log("data send : ", data)
 
   try {
     const userSignupParam = { ...data, ...staticParam }
-    const respData = await axios.post(requests.fetchUserSignup, userSignupParam)
-    console.log("respData", respData)
+    const respData = await axios.post(process.env.NEXT_PUBLIC_USER_SIGNUP, userSignupParam)
+    // console.log("respData", respData)
     return true
   } catch (e) {
     console.log("e", e)
@@ -23,19 +22,24 @@ export async function userSignup(data: { [key: string]: string }) {
 
 export async function businessSignup(data: { [key: string]: string }) {
   //
-  console.log("-----businessSignup api-----")
-  console.log("data send : ", data)
+  // console.log("-----businessSignup api-----")
+  // console.log("data send : ", data)
 
   try {
     const userSignupParam = { ...data, ...staticParam }
     const respData = await axios.post(
-      requests.fetchBusinessSignup,
+      process.env.NEXT_PUBLIC_BUSINESS_SIGNUP,
       userSignupParam,
     )
-    console.log("respData", respData)
+    // console.log("respData", respData)
     return true
-  } catch (e) {
-    console.log("e", e)
+  } catch (e: any) {
+    const errorResp = e?.response?.data?.code
+
+    // console.log("errorResp", errorResp)
+    if (errorResp === 'ER_DUP_ENTRY') {
+      return errorResp
+    }
     return false
   }
 }

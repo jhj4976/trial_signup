@@ -26,7 +26,12 @@
   font-size: var(--font-size-15);
   color: #0f0f0f;
 }
-.footerContainer .top p:last-child {
+
+.footerContainer .top p {
+  cursor: pointer;
+}
+
+.footerCustomerService {
   font-family: "bold";
 }
 
@@ -48,7 +53,7 @@
   width: 100%;
 }
 
-.footerContainer .wrapper > p {
+.footerContainer .wrapper>p {
   margin-top: 12px;
   padding: 0 12px;
   white-space: nowrap;
@@ -107,9 +112,11 @@
   justify-content: center;
   gap: 8px;
 }
+
 .copyrightWrapper {
   text-align: center;
 }
+
 .mobileFooter .divider {
   background-color: #8c8c8c;
   width: 1px;
@@ -122,6 +129,10 @@
   line-height: 2;
 }
 
+.mobileFooter .termsPolicyWrapper p {
+  cursor: pointer;
+}
+
 .mobileFooter .imgWrapper {
   display: flex;
   align-items: flex-end;
@@ -131,7 +142,7 @@
   display: none;
 }
 
-@media screen and (max-width: 950px) {
+@media screen and (max-width: 920px) {
   .footerContainer {
     display: none;
   }
